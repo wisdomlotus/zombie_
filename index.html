@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>좀비 확산 막기</title>
+  <link rel="stylesheet" href="index.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-block">
+      <span class="brand-mark" aria-hidden="true">Z</span>
+      <div>
+        <p class="eyebrow">중2 코딩수학 · 7주차</p>
+        <h1>좀비 확산 막기</h1>
+        <p class="subtitle">연결된 통로를 읽고, 한 발 앞서 대피소를 지켜 보세요.</p>
+      </div>
+    </div>
+    <button class="button button-ghost" id="newGameTop" type="button">새 게임</button>
+  </header>
+
+  <main class="page-shell">
+    <section class="game-card card">
+      <div class="game-heading">
+        <div>
+          <p class="eyebrow">NIGHT 01 · CAMPUS LOCKDOWN</p>
+          <h2>학교의 연결을 끊어라</h2>
+        </div>
+        <div class="turn-badge"><span>남은 시간</span><strong id="turnValue">8</strong><span>턴</span></div>
+      </div>
+
+      <div class="map-stage">
+        <svg id="mapSvg" viewBox="0 0 760 500" role="img" aria-labelledby="mapTitle mapDescription">
+          <title id="mapTitle">학교 탈출 지도</title>
+          <desc id="mapDescription">학교의 여러 장소가 통로로 연결되어 있습니다. 플레이어는 좀비를 피해 대피소로 이동합니다.</desc>
+        </svg>
+        <div class="map-message" id="mapMessage" aria-live="polite">도서관으로 이동해 해독제 위치를 확인하세요.</div>
+      </div>
+
+      <div class="map-footer">
+        <div class="map-legend" aria-label="지도 범례">
+          <span><i class="legend-swatch player-swatch"></i>나</span>
+          <span><i class="legend-swatch zombie-swatch"></i>좀비</span>
+          <span><i class="legend-swatch barrier-swatch"></i>차단된 통로</span>
+        </div>
+        <span class="map-hint">장소를 클릭해 이동하고, 통로를 클릭해 바리케이드를 설치하세요.</span>
+      </div>
+    </section>
+
+    <aside class="side-column">
+      <section class="card mission-card">
+        <div class="card-heading">
+          <div>
+            <p class="eyebrow">MISSION</p>
+            <h3>오늘 밤의 목표</h3>
+          </div>
+          <span class="mission-status" id="missionStatus">진행 중</span>
+        </div>
+        <ol class="mission-list">
+          <li id="objectiveAntidote"><span class="objective-mark">1</span><span>과학실에서 해독제를 확보하세요.</span></li>
+          <li id="objectiveShelter"><span class="objective-mark">2</span><span>해독제를 들고 대피소로 돌아오세요.</span></li>
+        </ol>
+      </section>
+
+      <section class="card control-card">
+        <div class="control-stat-row">
+          <div><span class="stat-label">바리케이드</span><strong id="barrierValue">3</strong><small>개 남음</small></div>
+          <div><span class="stat-label">이동 거리</span><strong id="distanceValue">0</strong><small>칸 이동</small></div>
+        </div>
+        <button class="button button-warning button-block" id="barrierMode" type="button" aria-pressed="false">바리케이드 설치 모드</button>
+        <button class="button button-primary button-block" id="endTurn" type="button">다음 턴 진행</button>
+        <p class="control-note" id="controlNote">한 턴에 한 칸 이동하거나 통로를 차단할 수 있습니다. 차단은 다음 턴에도 유지됩니다.</p>
+      </section>
+
+      <section class="card intel-card">
+        <div class="card-heading">
+          <div>
+            <p class="eyebrow">FIELD INTEL</p>
+            <h3 id="roomTitle">현재 위치: 정문</h3>
+          </div>
+          <span class="danger-level" id="dangerLevel">안전</span>
+        </div>
+        <p class="intel-copy" id="roomCopy">여기서 여러 통로로 갈라집니다. 다음 이동을 신중하게 선택하세요.</p>
+        <div class="connection-info"><span>이동 가능한 방향</span><strong id="connectionCount">2</strong></div>
+      </section>
+
+      <section class="card rules-card">
+        <p class="eyebrow">HOW TO PLAY</p>
+        <ul>
+          <li>나와 연결된 장소를 클릭하면 한 칸 이동합니다.</li>
+          <li>좀비는 매 턴 나를 향해 한 칸씩 이동합니다.</li>
+          <li>통로를 차단하면 나와 좀비 모두 지나갈 수 없습니다.</li>
+          <li>좀비에게 잡히거나 시간이 끝나면 게임 오버입니다.</li>
+        </ul>
+      </section>
+    </aside>
+  </main>
+
+  <section class="log-section card">
+    <div class="log-heading">
+      <div>
+        <p class="eyebrow">NIGHT LOG</p>
+        <h2>상황 기록</h2>
+      </div>
+      <span id="logSummary">해독제를 찾아 대피소로 이동하세요.</span>
+    </div>
+    <div class="log-list" id="logList" aria-live="polite"></div>
+  </section>
+
+  <div class="result-overlay" id="resultOverlay" hidden>
+    <div class="result-dialog" role="dialog" aria-modal="true" aria-labelledby="resultTitle">
+      <p class="eyebrow">MISSION RESULT</p>
+      <h2 id="resultTitle">대피 성공</h2>
+      <p id="resultCopy"></p>
+      <button class="button button-primary" id="newGameResult" type="button">다시 도전하기</button>
+    </div>
+  </div>
+
+  <footer>연결된 공간을 읽는 힘이 가장 강한 생존 전략입니다.</footer>
+  <script src="index.js" defer></script>
+</body>
+</html>
