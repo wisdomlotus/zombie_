@@ -23,7 +23,7 @@ const state = {
   barriers: new Set(),
   barrierTokens: 3,
   turn: 1,
-  maxTurns: 8,
+  maxTurns: 12,
   distance: 0,
   hasAntidote: false,
   movedThisTurn: false,
